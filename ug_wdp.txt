@@ -1,0 +1,35 @@
+__________________________________________________________________USER GUIDE__________________________________________________________________
+
+Basic Command Syntax (PS format)
+[./wdp.exe <command> <arg1> <arg2> <arg3>...<argN>]
+
+COMMAND LIST__________________________________________________________________________________________________________________________________
+
+help - [./wdp.exe help]
+	Displays user guide and list of commands.
+	(The ug_wdp.txt must be present in the same directory as the executable)
+
+org - [./wdp.exe org <target_dir>]
+	Non recursively arranges files in the target directory into sub directories based on extension.
+	(If sub directory of the format <ext_Files> does not exists, it is created)
+
+tks - [./wdp.exe tks <target_dir> <token_string>]
+	Recursively searches target directory and displays files with only a substring of their filename passed as token.
+	(If filename entirely matches token, it is displayed followed by script termination)
+
+ds - [./wdp.exe ds <src_dir> <dest_dir> <-flag>]
+	Performs one way directory syncronization by syncronizing destination directory with source directory.
+	FLAG : -s (status)
+	[./wdp.exe ds <src_dir> <dest_dir> -s]
+		Enumerates source directory files and directories.
+		For each file, checks if destination has a copy of it or not.
+			If Not displays message.
+			If yes, compares last write dates to check for possible updates.
+				displays message if source file was further edited after destination file's last edit.
+		For directories, recursively follws the same steps.
+	FLAG : -u (update)
+	[./wdp.exe ds <src_dir> <dest_dir> -u]
+		Follows the same steps and makes necessary changes so that the files and directories in destination match the ones in source.
+		(If a file exists only in destination and not source, it is not tracked as the syncronization is one way)
+		
+____________________________________________________________________________________________________________________________________________
