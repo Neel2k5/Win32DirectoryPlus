@@ -6,7 +6,7 @@
 #include "gen_purp_funcs.h"
 
 bool gen_purp_validate_path(char *dir_path){
-	int dir_path_size = strlen(dir_path), i=0;
+	size_t dir_path_size = strlen(dir_path), i=0;
 	char temp_path[MAX_PATH],*wildcard_token;
 	const char invalid[]= "<>/|?";
 	bool backslash_presance =false,tokenpresence=false;
