@@ -33,5 +33,18 @@ ds - [./wdp.exe ds <src_dir> <dest_dir> <-flag>]
     (If a file exists only in destination and not source, it is not tracked as the syncronization is one way)
 
 dt - [./wdp.exe dt <dir_path>]
-  Displays directory's files and sub-directories recursively in a tree like format by enumerating over each file or directory.
+  Displays directory's files and sub-directories recursively in a tree like format by enumerating over each file or directory. 
+  (ignores traversal in directories starting with '.', eg: .git)
+
+tc - [./wdp.exe tc <target_dir> -ol <age_in_MONTHS> <-flag>]
+  Performs collection of files older than a specified number of months recursively from target directory
+  to a newly formed trashbin recursively. 
+  (ignores traversal in directories starting with '.', eg: .git) 
+  FLAG : -s (status)
+  [./wdp.exe tc <target_dir> -ol <age_in_MONTHS> -s]
+    Recursively displays all the files older than specified age from the target and any subdirectory in it.
+  FLAG : -u (update)
+  [./wdp.exe tc <target_dir> -ol <age_in_MONTHS> -u]
+    Along with the functions of status flag, also moves the files into trashbin, which is created in the target if does not already exists.
+    ASKS FOR EXTRA CONFIRMATION
 ____________________________________________________________________________________________________________________________________________

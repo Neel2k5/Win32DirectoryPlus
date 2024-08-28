@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "feature_funcs.h"
 #include "gen_purp_funcs.h"
 
@@ -84,6 +85,28 @@ int main(int argc, char *argv[]) {
         else
           feature_dir_tree(argv[2],1);
     }
+
+    else if(strcmp(argv[1],"tc")==0){// ./wdp.exe tc <dir_path> -ol <months> <-flag>
+
+        if(argc<6){
+           fprintf(stderr, "\nTOO LITTLE ARGUMENTS FOR dt\n");
+           return 0;
+        }
+        else if(argc>6){
+           fprintf(stderr, "\nTOO MANY ARGUMENT FOR dt\n");
+          return 0;
+        }
+        else{
+            if(!(strcmpi(argv[5],"-s")==0||strcmpi(argv[5],"-u")==0)/*||strcmpi(argv[3],"-ol")==0*/){
+          fprintf(stderr, "\nINVALID ARGUMENT FOR tc\n");
+            return 0;
+        }
+       
+        feature_tc(argv[2],atoi(argv[4]),tolower(argv[5][1]),1);
+        }
+    }
+
+    
     fprintf(stdout, "\n----------------------------------------------\n");
     return 0;
 }

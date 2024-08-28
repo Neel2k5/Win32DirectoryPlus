@@ -26,6 +26,7 @@ void feature_organise_dir(char *dir_path);
  * 
  */
 void feature_searching(char *dir_path, char *token,bool *flag);
+
 /**## FEATURE_DIR_SYNC ##
  * Takes path of a source and a destination and recursively checks if all the files and subdirectories in 
  * source are present in destination and are upto date or not.
@@ -33,10 +34,18 @@ void feature_searching(char *dir_path, char *token,bool *flag);
  * IMP>>> COMPARISON IF EXISTS IS BASED OFF LASTWRITEDATE ATTRIBUTE OF WIN32_FIND_DATA TYPE STRUCTURE
  */
 void feature_dir_sync(char *src_dir,char *dest_dir,char comm);
+
 /**## FEATURE_DIR_TREE ##
  * Displays the given directory's files and subdirectories in a tree format recursively
  * Depth should be set to 1 in non recursive call
  */
 void feature_dir_tree(char *dir_path,int depth);
+
+/**## FEATURE_TC ##
+ * Tc or trash collector takes a path of a target dir, an offset which is the least number of months ago a file was edited and a flag
+ *	Enumerates through entire dir and subdirs in it recursively.
+ * If flag is 'u', creates a trashbin and moves the files as old as or older than offset into it
+ */
+void feature_tc(char *dir_path,unsigned short offset,char comm,int depth);//offset is the number of months, depth is to be initially set to 1 ,comm - s(status),u(update)
 
 #endif

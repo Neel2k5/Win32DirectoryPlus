@@ -236,7 +236,7 @@ void feature_dir_sync(char *src_dir,char *dest_dir,char comm){
         if (FindNextFileA(search_handle1, &container) == 0) { // FindNextFile returns 0 on failure
             break;
         }
-        else if(strcmp(container.cFileName,"..")==0||strcmp(container.cFileName,".")==0)
+        else if(strcmp(container.cFileName,"..")==0||strcmp(container.cFileName,".")==0||container.cFileName[0]=='.')
           {
            continue;
          }
@@ -307,7 +307,6 @@ void feature_dir_sync(char *src_dir,char *dest_dir,char comm){
 
 void feature_dir_tree(char *dir_path,int depth){
   char dir_path_mutable[PATH_LIM],
-       item_path[PATH_LIM],
        sub_dir[PATH_LIM];
 
   strcpy(dir_path_mutable,dir_path);
@@ -363,5 +362,109 @@ void feature_dir_tree(char *dir_path,int depth){
        
       }
   }
+
+void feature_tc(char *dir_path,unsigned short offset,char comm,int depth){//offset is the number of months, depth is to be initially set to 1 ,comm - s(status),u(update)
+    
+
+
+    char dir_path_mutable[PATH_LIM], trashbin[PATH_LIM],newpath[PATH_LIM],
+       sub_dir[PATH_LIM],ext[PATH_LIM];
+  strcpy(dir_path_mutable,dir_path);
+  if (dir_path_mutable[strlen(dir_path_mutable)-1] == '\n') { // Strips newline left by input (if any)
+       dir_path_mutable[strlen(dir_path_mutable)-1] = '\0';
+   }
+   bool validity = gen_purp_validate_path(dir_path_mutable); // Validates path for WinAPI functions if it's a valid dir path
+    //printf("\n(%s)\n\n", dir_path_mutable); // For testing
+
+   if (!validity) { // Early return if path is not a valid dir path by checks
+       fprintf(stderr, "\n%sPATH ERROR : CODE 3  %s\n", RED, RESET);
+       return;
+   }
+
+    
+   if(comm=='u'&&depth==1){//Extra confirmation
+    char ch[5];
+
+    //printf("\n%d",depth);//Testing
+    fprintf(stdout,"\nConfirm mass movement of files to trashbin? %sThis action is irreversable.%s (YYY/n)\n>>>",RED,RESET);
+    fgets(ch,5,stdin);
+    ch[3]='\0';
+    if(!(strcmp(ch,"YYY")==0)){
+      fprintf(stdout, "\n%sABORTED%s",RED,RESET);
+      return;
+    }
+    BOOL dir_existance_check;
+     dir_path_mutable[strlen(dir_path_mutable)-4]='\0';
+    sprintf(trashbin,"%s\\trashbin",dir_path_mutable);
+    dir_existance_check = CreateDirectoryA(trashbin, NULL);
+    if (dir_existance_check != 0) {
+        fprintf(stdout, "%s[trashbin does not exist. Was newly created.]%s", MAGENTA, RESET);
+    }
+    gen_purp_validate_path(dir_path_mutable);
+  }
+
+   SYSTEMTIME current,file;
+   WORD diff_in_months;
+
+   GetSystemTime(&current);
+   
+  WIN32_FIND_DATA container; // To store filenames and otherinfo
+    HANDLE search_handle;
+    search_handle = FindFirstFileA(dir_path_mutable, &container);
+    if(depth==1){
+    fprintf(stdout,"\nFILES OLDER THAN %d MONTHS:",offset);
+  }
+    while(1){
+      if (FindNextFileA(search_handle, &container) == 0) { // FindNextFile returns 0 on failure
+            break;
+        }
+
+        gen_purp_validate_path(dir_path_mutable);
+
+        dir_path_mutable[strlen(dir_path_mutable)-4]='\0';
+        sprintf(sub_dir,"%s\\%s",dir_path_mutable,container.cFileName);
+        strcpy(ext,sub_dir);
+        gen_purp_ext_extension(ext);
+
+      if(strcmp(container.cFileName,"..")==0||strcmp(container.cFileName,".")==0||strcmp(container.cFileName,"trashbin")==0||container.cFileName[0]=='.'||strcmp(ext,"exe")==0||strcmp(ext,"o")==0){
+        continue;
+      }
+
+      if(!(container.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)){
+        if(FileTimeToSystemTime(&container.ftLastWriteTime,&file)==FALSE){
+            fprintf(stderr, "\n%sTIME FETCHING  ERROR FOR %S : CODE 3  %s\n", RED,container.cFileName, RESET);
+            continue;
+        }
+        diff_in_months=(current.wMonth+(current.wYear*12)+(current.wDay/30))-(file.wMonth+(file.wYear*12)+(file.wDay/30));
+        if(diff_in_months>=offset){
+
+            fprintf(stdout,"\n%s%s%s\n(%s%s%s)",YELLOW,container.cFileName,RESET,CYAN,sub_dir,RESET);
+          //printf("%s\n",sub_dir);//Testing
+
+          if(comm=='u'){
+            //Move in trash sub_dir->newpath
+
+            sprintf(newpath,"%s\\%s",trashbin,container.cFileName);
+            BOOL Movement_check = MoveFile(sub_dir,newpath);
+            if (Movement_check != 0) { // To check if file was moved
+                fprintf(stdout, "\nmoved to trashbin\n[%s->%s]\n", dir_path, trashbin);
+            } else {
+                fprintf(stderr, "%s\nMOVEMENT ERROR : CODE %lu \n%s", RED, GetLastError(), RESET);
+            }
+          }
+        }
+
+      }
+      else{
+        feature_tc(sub_dir,offset,comm,depth+1);
+      }
+    }
+    if (GetLastError() == ERROR_NO_MORE_FILES) {
+        FindClose(search_handle);
+       
+      }
+
+
+}
 
 

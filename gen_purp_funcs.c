@@ -34,7 +34,7 @@ bool gen_purp_validate_path(char *dir_path){
   strrev(temp_path);
   wildcard_token=strtok(temp_path,"\\");
   //printf("(%s)\n",wildcard_token );  //For testing
-  if(strstr(wildcard_token,"*.*")!=NULL||strchr(wildcard_token,'*')!=NULL){//Adds Neecessary wildcard token if not there already
+  if(strstr(wildcard_token,"*.*")!=NULL){//Adds Neecessary wildcard token if not there already
     tokenpresence = true;
   }
   if(!tokenpresence){
