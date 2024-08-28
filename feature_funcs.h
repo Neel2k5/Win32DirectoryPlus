@@ -29,8 +29,14 @@ void feature_searching(char *dir_path, char *token,bool *flag);
 /**## FEATURE_DIR_SYNC ##
  * Takes path of a source and a destination and recursively checks if all the files and subdirectories in 
  * source are present in destination and are upto date or not.
- * 			-> If not: Does the necessary changes
+ *      -> If not: Does the necessary changes
  * IMP>>> COMPARISON IF EXISTS IS BASED OFF LASTWRITEDATE ATTRIBUTE OF WIN32_FIND_DATA TYPE STRUCTURE
  */
 void feature_dir_sync(char *src_dir,char *dest_dir,char comm);
+/**## FEATURE_DIR_TREE ##
+ * Displays the given directory's files and subdirectories in a tree format recursively
+ * Depth should be set to 1 in non recursive call
+ */
+void feature_dir_tree(char *dir_path,int depth);
+
 #endif

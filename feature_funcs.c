@@ -14,6 +14,7 @@
 #define YELLOW  "\033[33m"
 #define MAGENTA "\033[35m"
 #define CYAN    "\033[36m"
+#define BLUE "\033[34m"
 
 //path limit hard code, change to 32767 if script deals with extended paths '\\?\'
 #define PATH_LIM 260 
@@ -149,11 +150,11 @@ void feature_searching(char *dir_path, char *token,bool *flag) {
         sprintf(subdir,"%s\\%s",dpm_copy,container.cFileName);
         feature_searching(subdir,token,flag);}
         else if (strcmp(container.cFileName, token) == 0) {
-        	fprintf(stdout,"\n\n------------------------------------[%sexact match found%s]------------------------------------\n",GREEN,RESET);
+          fprintf(stdout,"\n\n------------------------------------[%sexact match found%s]------------------------------------\n",GREEN,RESET);
             fprintf(stdout, "\n%s%s%s\n%s%s\\%s%s\n", GREEN, container.cFileName, RESET, CYAN, dir_path, container.cFileName, RESET);
             matches++;
             fprintf(stdout, "\n-------------------------------------------------------------------------------------------\n",dir_path, matches);
-    	
+      
             *flag=true;
             continue;
         } else if (strstr(container.cFileName, token) != NULL) {
@@ -163,15 +164,15 @@ void feature_searching(char *dir_path, char *token,bool *flag) {
         
     }
     if(*flag){
-    	return;
+      return;
     }
     if (GetLastError() == ERROR_NO_MORE_FILES) {
-    	
-    	if(matches>0){
-    		fprintf(stdout,"\n%spossible instance present%s\n",GREEN,RESET);
-    	}
+      
+      if(matches>0){
+        fprintf(stdout,"\n%spossible instance present%s\n",GREEN,RESET);
+      }
         fprintf(stdout, "\nEND OF DIRECTORY [%s]\n%d match(es) found\n-------------------------------------------------------------------------------------------\n",dir_path, matches);
-    	
+      
     } 
     
     else {
@@ -183,61 +184,61 @@ void feature_searching(char *dir_path, char *token,bool *flag) {
 }
 
 void feature_dir_sync(char *src_dir,char *dest_dir,char comm){
-	char src_mutable[PATH_LIM],dest_mutable[PATH_LIM],temp_dest_path[PATH_LIM],temp_src_path[PATH_LIM];
-	bool src_valid,dest_valid;
-	int time_comparison;//To check difference in filewrite times
-	//to avoid argument mutation
-	strcpy(src_mutable,src_dir);
-	strcpy(dest_mutable,dest_dir);
-	src_valid = gen_purp_validate_path(src_mutable);
-	if(!src_valid){
-		fprintf(stderr,"\n%sPATH ERROR: Invalid path of source directory%s\n",RED,RESET);
-		return;
-	}
-	dest_valid = gen_purp_validate_path(dest_mutable);
-	if(!src_valid){
-		fprintf(stderr,"\n%sPATH ERROR: Invalid path of destination directory%s\n",RED,RESET);
-	}
-	BOOL copystatus,obj_status;
-	DWORD dest,src,if_in_dest;
-	HANDLE search_handle1;
-	WIN32_FIND_DATAA container,dest_timestore;
-	//Done to reuse validate path and remove unwanted mutation
-	src_mutable[strlen(src_mutable)-4]='\0';
-	dest_mutable[strlen(dest_mutable)-4]='\0';
-	src = GetFileAttributesA(src_mutable);
-	dest = GetFileAttributesA(dest_mutable);
+  char src_mutable[PATH_LIM],dest_mutable[PATH_LIM],temp_dest_path[PATH_LIM],temp_src_path[PATH_LIM];
+  bool src_valid,dest_valid;
+  int time_comparison;//To check difference in filewrite times
+  //to avoid argument mutation
+  strcpy(src_mutable,src_dir);
+  strcpy(dest_mutable,dest_dir);
+  src_valid = gen_purp_validate_path(src_mutable);
+  if(!src_valid){
+    fprintf(stderr,"\n%sPATH ERROR: Invalid path of source directory%s\n",RED,RESET);
+    return;
+  }
+  dest_valid = gen_purp_validate_path(dest_mutable);
+  if(!src_valid){
+    fprintf(stderr,"\n%sPATH ERROR: Invalid path of destination directory%s\n",RED,RESET);
+  }
+  BOOL copystatus,obj_status;
+  DWORD dest,src,if_in_dest;
+  HANDLE search_handle1;
+  WIN32_FIND_DATAA container,dest_timestore;
+  //Done to reuse validate path and remove unwanted mutation
+  src_mutable[strlen(src_mutable)-4]='\0';
+  dest_mutable[strlen(dest_mutable)-4]='\0';
+  src = GetFileAttributesA(src_mutable);
+  dest = GetFileAttributesA(dest_mutable);
 
-	if(src==INVALID_FILE_ATTRIBUTES){
-		 fprintf(stdout, "\n%sPATH ERROR : SOURCE DOES NOT EXIST%s\n", RED,RESET);
-		 return;
+  if(src==INVALID_FILE_ATTRIBUTES){
+     fprintf(stdout, "\n%sPATH ERROR : SOURCE DOES NOT EXIST%s\n", RED,RESET);
+     return;
             
-	}
-	if(dest==INVALID_FILE_ATTRIBUTES){
-		fprintf(stdout, "\n%sDESTINATION DOES NOT EXIST%s\n", RED,RESET);
-		if(comm =='u'){
-		if(CreateDirectoryA(dest_mutable,NULL)==0){
-			fprintf(stderr,"%s\nNON EXISTING DESTINATION CREATION ERROR : CODE : %lu%s\n",RED,RESET);
-			return;		
-		}
-		fprintf(stdout, "\nCreated new directory : %s%s\n %s\n", CYAN,dest_mutable,RESET);
-	
-		}
-	}
-	gen_purp_validate_path(src_mutable);//Setting up src_mutable for FindFirsstFile()
-	search_handle1 = FindFirstFileA(src_mutable,&container);
-	src_mutable[strlen(src_mutable)-4]='\0';
-	if(search_handle1==INVALID_HANDLE_VALUE){
-		fprintf(stderr,"\n%sHANDLE ERROR : CODE %lu\n%s",RED,GetLastError(),RESET);
-		return;
-	}
-	while (1) {
+  }
+  if(dest==INVALID_FILE_ATTRIBUTES){
+    fprintf(stdout, "\n%sDESTINATION DOES NOT EXIST%s\n", RED,RESET);
+    if(comm =='u'){
+    if(CreateDirectoryA(dest_mutable,NULL)==0){
+      fprintf(stderr,"%s\nNON EXISTING DESTINATION CREATION ERROR : CODE : %lu%s\n",RED,RESET);
+      return;   
+    }
+    fprintf(stdout, "\nCreated new directory : %s%s\n %s\n", CYAN,dest_mutable,RESET);
+  
+    }
+  }
+  gen_purp_validate_path(src_mutable);//Setting up src_mutable for FindFirsstFile()
+  search_handle1 = FindFirstFileA(src_mutable,&container);
+  src_mutable[strlen(src_mutable)-4]='\0';
+  if(search_handle1==INVALID_HANDLE_VALUE){
+    fprintf(stderr,"\n%sHANDLE ERROR : CODE %lu\n%s",RED,GetLastError(),RESET);
+    return;
+  }
+  while (1) {
         if (FindNextFileA(search_handle1, &container) == 0) { // FindNextFile returns 0 on failure
             break;
         }
         else if(strcmp(container.cFileName,"..")==0||strcmp(container.cFileName,".")==0)
-        	{
-        	 continue;
+          {
+           continue;
          }
         
         sprintf(temp_dest_path,"%s\\%s",dest_mutable,container.cFileName);
@@ -246,62 +247,121 @@ void feature_dir_sync(char *src_dir,char *dest_dir,char comm){
         if (if_in_dest == INVALID_FILE_ATTRIBUTES) {//If file is entirely not found
             fprintf(stdout,"\n%s%s%s \nDoes not exist in destination",YELLOW,container.cFileName,RESET);
             if(comm=='u'){
-            	//LOGIC FOR UPDATE
-            	//printf("\n UPDATE LOGIC\n");//TESTING
-            	if(!(container.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)){
-            		//Not a dir
-            		if(CopyFile(temp_src_path,temp_dest_path,FALSE)==0){
-            			fprintf(stderr,"\n%sCOPYING ERROR : CODE %lu%s\n",RED,GetLastError(),RESET);
-            			continue;
-            			}
-            			fprintf(stdout,"\n%sSucessfully coppied %s%s%s%s \nto : %s%s%s\n",GREEN,RESET,YELLOW,container.cFileName,
-            					RESET,CYAN,temp_dest_path,RESET);
-	            		}
-	            	else {//Logic for dir copying
-	            		if(comm =='u'){
-									if(CreateDirectoryA(temp_dest_path,NULL)==0){
-										fprintf(stderr,"%s\nDESTINATION CREATION ERROR : CODE : %lu%s\n",RED,RESET);
-										return;		
-									}
-										fprintf(stdout, "\nCreated new directory in destination : %s%s\n %s\n", CYAN,temp_dest_path,RESET);
-										feature_dir_sync(temp_src_path,temp_dest_path,comm);
-								}
-	            		}
-	            	} 
-	            	else {//If command is just s, no changes are to be made
-				        	 continue;
-				        	}
-	    	}
-	    	else {
-	    		if(!(container.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)){
-	    			if(FindFirstFileA(temp_dest_path,&dest_timestore)==INVALID_HANDLE_VALUE){
-	    				fprintf(stderr,"\n%sDEST HANDLE ERROR : CODE %lu%s\n");
-	    				continue;
-	    			}   		
-	    			time_comparison = CompareFileTime(&container.ftLastWriteTime,&dest_timestore.ftLastWriteTime);//Comparison by last edit time
-	    			if(time_comparison>0){
-	    				fprintf(stdout,"\n%s%s%s \nPossible edits at source that are absent in destination",YELLOW,container.cFileName,RESET);
-	    				if(comm == 'u'){
-	    					if(DeleteFile(temp_dest_path)==0&CopyFile(temp_src_path,temp_dest_path,FALSE)==0){
-	    						fprintf(stderr,"\n%sCOMMIT ERROR : CODE %lu%s\n",RED,GetLastError(),RESET);
-	    						continue;
-	    					}
-	    					fprintf(stdout,"\n%sChanges in source are commited to destination Sucessfully%s\n",GREEN,RESET);
-	    				}
-	    			}
+              //LOGIC FOR UPDATE
+              //printf("\n UPDATE LOGIC\n");//TESTING
+              if(!(container.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)){
+                //Not a dir
+                if(CopyFile(temp_src_path,temp_dest_path,FALSE)==0){
+                  fprintf(stderr,"\n%sCOPYING ERROR : CODE %lu%s\n",RED,GetLastError(),RESET);
+                  continue;
+                  }
+                  fprintf(stdout,"\n%sSucessfully coppied %s%s%s%s \nto : %s%s%s\n",GREEN,RESET,YELLOW,container.cFileName,
+                      RESET,CYAN,temp_dest_path,RESET);
+                  }
+                else {//Logic for dir copying
+                  if(comm =='u'){
+                  if(CreateDirectoryA(temp_dest_path,NULL)==0){
+                    fprintf(stderr,"%s\nDESTINATION CREATION ERROR : CODE : %lu%s\n",RED,RESET);
+                    return;   
+                  }
+                    fprintf(stdout, "\nCreated new directory in destination : %s%s\n %s\n", CYAN,temp_dest_path,RESET);
+                    feature_dir_sync(temp_src_path,temp_dest_path,comm);
+                }
+                  }
+                } 
+                else {//If command is just s, no changes are to be made
+                   continue;
+                  }
+        }
+        else {
+          if(!(container.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)){
+            if(FindFirstFileA(temp_dest_path,&dest_timestore)==INVALID_HANDLE_VALUE){
+              fprintf(stderr,"\n%sDEST HANDLE ERROR : CODE %lu%s\n");
+              continue;
+            }       
+            time_comparison = CompareFileTime(&container.ftLastWriteTime,&dest_timestore.ftLastWriteTime);//Comparison by last edit time
+            if(time_comparison>0){
+              fprintf(stdout,"\n%s%s%s \nPossible edits at source that are absent in destination",YELLOW,container.cFileName,RESET);
+              if(comm == 'u'){
+                if(DeleteFile(temp_dest_path)==0&CopyFile(temp_src_path,temp_dest_path,FALSE)==0){
+                  fprintf(stderr,"\n%sCOMMIT ERROR : CODE %lu%s\n",RED,GetLastError(),RESET);
+                  continue;
+                }
+                fprintf(stdout,"\n%sChanges in source are commited to destination Sucessfully%s\n",GREEN,RESET);
+              }
+            }
 
-	    		}
-	    		else if(container.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY){
-	    		//printf("(%s\n%s)\n",temp_src_path,temp_dest_path);//testing
+          }
+          else if(container.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY){
+          //printf("(%s\n%s)\n",temp_src_path,temp_dest_path);//testing
 
-	    		feature_dir_sync(temp_src_path,temp_dest_path,comm);}
-	    		
-	    	}
+          feature_dir_sync(temp_src_path,temp_dest_path,comm);}
+          
+        }
 
-		   }
-	if (GetLastError() == ERROR_NO_MORE_FILES) {//base case for recursion
-    	return;
+       }
+  if (GetLastError() == ERROR_NO_MORE_FILES) {//base case for recursion
+      return;
     } 
-	}
+  }
+
+void feature_dir_tree(char *dir_path,int depth){
+  char dir_path_mutable[PATH_LIM],
+       item_path[PATH_LIM],
+       sub_dir[PATH_LIM];
+
+  strcpy(dir_path_mutable,dir_path);
+  if (dir_path_mutable[strlen(dir_path_mutable)] == '\n') { // Strips newline left by input (if any)
+       dir_path_mutable[strlen(dir_path_mutable)] = '\0';
+   }
+   bool validity = gen_purp_validate_path(dir_path_mutable); // Validates path for WinAPI functions if it's a valid dir path
+    //printf("\n(%s)\n\n", dir_path_mutable); // For testing
+
+   if (!validity) { // Early return if path is not a valid dir path by checks
+       fprintf(stderr, "\n%sPATH ERROR : CODE 3  %s\n", RED, RESET);
+       return;
+   }
+
+    WIN32_FIND_DATA container; // To store filenames
+    HANDLE search_handle;
+    search_handle = FindFirstFileA(dir_path_mutable, &container);
+    while(1){
+      if (FindNextFileA(search_handle, &container) == 0) { // FindNextFile returns 0 on failure
+            break;
+        }
+      if((strcmp(container.cFileName,"..")==0)&&depth==1){
+          fprintf(stdout,"%s%s%s\n",BLUE,gen_purp_striplast(dir_path_mutable),RESET);
+          continue;
+      }
+      else if((strcmp(container.cFileName,"..")==0)&&depth !=1){
+           continue;
+       }
+      for(int i=0;i<depth;i++){
+        fprintf(stdout,"%s|%s",BLUE,RESET);
+        }
+      if(!(container.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
+        fprintf(stdout,"%s--%s",BLUE,RESET);
+        fprintf(stdout,"%s%s%s\n",YELLOW,container.cFileName,RESET);
+      }
+      else{
+        
+        fprintf(stdout,"%s%s%s\n",BLUE,container.cFileName,RESET);
+        //printf("(%s)\n",dir_path_mutable);//testing
+        
+         if(container.cFileName[0]=='.'){continue;}
+        //Extra validation for standardisation
+        gen_purp_validate_path(dir_path_mutable);
+        //Removal of validity token so subdir can be constructed
+        dir_path_mutable[strlen(dir_path_mutable)-3]='\0';
+        sprintf(sub_dir,"%s\\%s",dir_path_mutable);
+        //printf("(%s)\n",sub_dir);//testing
+        feature_dir_tree(sub_dir,depth+1);
+      }
+      }
+      if (GetLastError() == ERROR_NO_MORE_FILES) {
+        FindClose(search_handle);
+       
+      }
+  }
 
 

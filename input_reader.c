@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 
     if (strcmp(argv[1], "help") == 0) {
 //         printf("\nreaches c1"); // Testing
-	gen_purp_ugdisplay();
+  gen_purp_ugdisplay();
     } else if (strcmp(argv[1], "org") == 0) {
         if (argc < 3) {
             fprintf(stderr, "\nTOO LITTLE ARGUMENTS FOR org\n");
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
         }
         feature_organise_dir(dir_path);
     } else if (strcmp(argv[1], "tks") == 0) {
-    	bool found_condition =false;//Return condition for recursive search
+      bool found_condition =false;//Return condition for recursive search
         if (argc < 3) {
             fprintf(stderr, "\nTOO LITTLE ARGUMENTS FOR tks\n");
             return 0;
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
         }
     }
     else if(strcmp(argv[1], "ds") == 0){
-    	if (argc < 5) {
+      if (argc < 5) {
             fprintf(stderr, "\nTOO LITTLE ARGUMENTS FOR ds\n");
             return 0;
         } else if (argc > 5) {
@@ -66,10 +66,23 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         else if(!(strcmpi(argv[4],"-s")==0||strcmpi(argv[4],"-u")==0)){
-        	fprintf(stderr, "\nINVALID LAST ARGUMENT FOR ds\n");
+          fprintf(stderr, "\nINVALID LAST ARGUMENT FOR ds\n");
             return 0;
         }
         feature_dir_sync(argv[2],argv[3],tolower(argv[4][1]));
+    }
+
+    else if(strcmp(argv[1],"dt")==0){
+        if(argc<3){
+           fprintf(stderr, "\nTOO LITTLE ARGUMENTS FOR dt\n");
+           return 0;
+        }
+        else if(argc>3){
+           fprintf(stderr, "\nTOO MANY ARGUMENT FOR dt\n");
+          return 0;
+        }
+        else
+          feature_dir_tree(argv[2],1);
     }
     fprintf(stdout, "\n----------------------------------------------\n");
     return 0;
