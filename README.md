@@ -52,3 +52,10 @@ It provides the following features:
     *Set Limitations:*
     (Ignores directories and files with names starting with '.' such as ".git" or ",gitignore")
 
+
+##Installation
+
+    
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE.md).
