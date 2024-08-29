@@ -1,3 +1,21 @@
+/**
+ *  Copyright 2024 Swapnaneel Dutta
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   limitations under the License.
+
+ */
+
+
+
 #ifndef FEATURE_FUNCS_H
 #define FEATURE_FUNCS_H
 #include <stdbool.h>
@@ -43,7 +61,7 @@ void feature_dir_tree(char *dir_path,int depth);
 
 /**## FEATURE_TC ##
  * Tc or trash collector takes a path of a target dir, an offset which is the least number of months ago a file was edited and a flag
- *	Enumerates through entire dir and subdirs in it recursively.
+ *  Enumerates through entire dir and subdirs in it recursively.
  * If flag is 'u', creates a trashbin and moves the files as old as or older than offset into it
  */
 void feature_tc(char *dir_path,unsigned short offset,char comm,int depth);//offset is the number of months, depth is to be initially set to 1 ,comm - s(status),u(update)
