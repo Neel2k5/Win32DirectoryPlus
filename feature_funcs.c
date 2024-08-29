@@ -65,7 +65,7 @@ void feature_organise_dir(char *dir_path) {
         }
 
         if (!(container.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) { // File is not a directory
-            if (strcmp(container.cFileName, "..") == 0) {
+            if (strcmp(container.cFileName, "..") == 0||container.cFileName[0]=='.') {
                 continue;
             }
 
