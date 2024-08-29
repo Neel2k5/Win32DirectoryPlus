@@ -57,7 +57,7 @@ It provides the following features:
 
 ## Installation
 
-# Using without modification
+## Using without modification
 
 Ensure you have the following installed on your system:
 
@@ -93,6 +93,22 @@ Ensure you have the following installed on your system:
     ```bash
     wdp
     ```
+## For Modification and usage
+
+Additional Requirement:
+- [MinGW](https://sourceforge.net/projects/mingw/)(Or any other c compiler set up on your machine)
+
+After Following upto step 4 above, you now have acess to the source files. Here is how they are structured:
+- **input_reader.c** : Contains the main for taking and processing cli inputs and calling respective header functions.
+- **feature_funcs.c** : Contains the core features of the tool, functions are prototyped in *feature_funcs.h*
+- **gen_purp_funcs.c** : Contains the genral functions that are used by the core feature functions of the tool, functions are prototyped in *gen_purp_funcs.h*
+
+After making necessary changes to source, compile the three files:
+```bash
+gcc input_reader.c feature_funcs.c gen_purp_funcs.c -o wdp
+```
+
+NOTE: The 'wdp help' command will not execute if the "ug\_wdp.txt" is not present with it in the same directory. Also to display newly made features in user guide, the text file must be edited.
 
 ## License
 
