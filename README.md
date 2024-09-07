@@ -110,6 +110,10 @@ gcc input_reader.c feature_funcs.c gen_purp_funcs.c -o wdp
 
 NOTE: The 'wdp help' command will not execute if the "ug\_wdp.txt" is not present with it in the same directory. Also to display newly made features in user guide, the text file must be edited.
 
+## Contributions
+Sorry we do not support contributions yet!! 
+**COMING SOON**
+
 ## License
 
 This project is licensed under the [Apache License 2.0](LICENSE.md).
